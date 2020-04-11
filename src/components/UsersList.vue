@@ -27,7 +27,7 @@ export default class UsersList extends Vue {
       email: ''
   }
 
-  apiBase = "http://192.168.99.100:3000/users"
+  apiBase = `${process.env.VUE_APP_API_HOST}/users`;
 
   created() {
     this.loadUsers();
