@@ -1,17 +1,17 @@
-FROM node:10-alpine
+FROM node:lts-alpine AS build
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+WORKDIR /app
+COPY . .
 
-WORKDIR /home/node/app
+RUN yarn --frozen-lockfile
+RUN yarn build
 
-COPY package*.json ./
 
-USER node
+FROM nginx:stable
 
-RUN npm install
+EXPOSE 8000
 
-COPY --chown=node:node . .
+COPY --from=build /app/dist /var/www
+COPY ./ops/nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 8080
-
-CMD [ "npm", "run", "serve" ]
+CMD ["nginx", "-g", "daemon off;"]
