@@ -16,7 +16,6 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import axios from "axios";
 
 @Component
 export default class UsersList extends Vue {
@@ -33,16 +32,20 @@ export default class UsersList extends Vue {
     this.loadUsers();
   }
 
-  loadUsers() {
-    axios.get(this.apiBase).then((response: any) => {
-      this.users = response.data
-    });
+  async loadUsers() {
+    const response = await fetch(this.apiBase);
+    this.users = await response.json();
   }
 
-  saveUser() {
-    axios.post(this.apiBase, this.user).then((response: any) => {
-      this.users.push(response.data)
-    });
+  async saveUser() {
+    const response = await fetch(this.apiBase, {
+        method: 'POST',
+        body: JSON.stringify(this.user)
+    })
+
+    const user = await response.json();
+
+    this.users.push(user);
   }
 }
 </script>
