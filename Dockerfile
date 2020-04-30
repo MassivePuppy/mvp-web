@@ -9,7 +9,7 @@ RUN yarn build
 
 FROM nginx:stable
 
-EXPOSE 8000
+EXPOSE 8080
 
 COPY --from=build /app/dist /var/www
 COPY ./ops/nginx.conf /etc/nginx/conf.d/default.conf
